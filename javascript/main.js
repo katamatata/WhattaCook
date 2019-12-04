@@ -1,4 +1,4 @@
-let apiKey = "90b4bf234e22493e89325b6f9cce868e";
+let apiKey = "a39b4ae2caf04c908679b4fa6f14d376";
 
 let randomRecipesUrl = "https://api.spoonacular.com/recipes/random?apiKey=" + apiKey + "&number=2";
 
@@ -15,11 +15,18 @@ if (favouriteRecipes === null) {
 
 function saveFavouriteRecipes() {
     localStorage.setItem('favouriteRecipes', JSON.stringify(favouriteRecipes));
+}
+
+function showFavouriteRecipes() {
 
 }
 
 async function onSearchClicked() {
     let userInput = document.getElementById("searchField").value;
+    // console.log(userInput);
+    if (userInput === '') {
+        return null;
+    }
     let results = await searchRecipesByIngredients(userInput);
     showResults(results);
 }
