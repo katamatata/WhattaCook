@@ -5,7 +5,8 @@ body {
 }
 
 header {
-    background-color: #ECF0F1;
+    /* background-color: #fcfbfd; */
+    background-color: #F4FAF2;
     font-size: 18px;
     color: black;
     display: flex;
@@ -14,6 +15,7 @@ header {
 }
 
 #heart {
+    color: #a55fc1;
     margin: 50px 0 50px 0;
 }
 
@@ -23,11 +25,11 @@ header {
 }
 
 #logo {
-    height: 105px;
+    height: 64px;
 }
 
 button {
-    background-color: #34495E;
+    background-color: #3a3a3a;
     border: none;
     text-align: center;
     font-size: 14px;
@@ -40,7 +42,7 @@ button {
 }
 
 button:hover {
-    background-color: #7B241C;
+    background-color: #4e255e;
 }
 
 button i {
@@ -48,11 +50,12 @@ button i {
 }
 
 #searchField {
-    background-color: #F4F6F7;
+    /* background-color: #F4F6F7; */
+    background-color: white;
     text-align: left;
     font-size: 14px;
     padding: 8px 55px 8px 16px;
-    border: 1px solid #4D5656;
+    border: 1px solid #3a3a3a;
     border-radius: 27px;
 }
 
@@ -67,25 +70,55 @@ button i {
     overflow: hidden;
 }
 
-#recipeList {
+#recipeListSection {
     width: 355px;
     overflow-y: auto;
-    background-color: #F5EEF8;
+    background-color: #f5ecf8;
+    /* background-color: #F4FAF2; */
 }
 
-#recipe {
+#recipeSection {
     width: calc(100% - 355px);
     padding: 16px;
     overflow-y: auto;
     background-color: white;
 }
 
-#recipe img {
+#recipeSection img {
     max-width: 500px;
     margin-bottom: 30px;
 }
 
-.recipeEl {
+.recipeName {
+    margin-bottom: 20px;
+    padding: 16px;
+    text-transform: uppercase;
+}
+
+.iconsWrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+.iconsWrapper i {
+    margin-right: 8px;
+}
+
+.infoWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingredientsWrapper {
+    padding: 16px;
+}
+
+.instructionsWrapper {
+    padding: 16px;
+}
+
+.recipeListEl {
     padding: 16px;
     border-bottom: 1px dotted #7F8C8D;
     display: flex;
@@ -93,12 +126,12 @@ button i {
     align-items: center;
 }
 
-.selected {
-    background-color: #EBDEF0;
+.recipeListEl:last-child {
+    border-bottom: none;
 }
 
-.recipeEl:last-child {
-    border-bottom: none;
+.selected {
+    background-color: #eddef2;
 }
 
 img.thumb {
