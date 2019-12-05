@@ -17,10 +17,6 @@ function saveFavouriteRecipes() {
     localStorage.setItem('favouriteRecipes', JSON.stringify(favouriteRecipes));
 }
 
-function showFavouriteRecipes() {
-
-}
-
 async function onSearchClicked() {
     let userInput = document.getElementById("searchField").value;
     // console.log(userInput);
@@ -165,7 +161,7 @@ async function showRecipe(id) {
     iconsWrapper.appendChild(heartEl);
 
     let heartIcon = document.createElement('i');
-    heartIcon.className = 'fas fa-heart';
+    heartIcon.className = 'far fa-heart';
     heartEl.appendChild(heartIcon);
 
 
