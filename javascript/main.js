@@ -1,25 +1,59 @@
-let apiKey = "a39b4ae2caf04c908679b4fa6f14d376";
+let apiKey = "90b4bf234e22493e89325b6f9cce868e";
+let numberOfResults = 10;
 
-let randomRecipesUrl = "https://api.spoonacular.com/recipes/random?apiKey=" + apiKey + "&number=2";
+let randomRecipesUrl = "https://api.spoonacular.com/recipes/random?apiKey=" + apiKey;
 
-let recipesByIngredientsUrl = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=" + apiKey + "&number=2";
+let recipesByIngredientsUrl = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=" + apiKey;
 
 let recipeFullInfoEndpointUrl = "https://api.spoonacular.com/recipes/";
 
-let favouriteRecipes = localStorage.getItem('favouriteRecipes');
-if (favouriteRecipes === null) {
-    favouriteRecipes = [];
-} else {
-    favouriteRecipes = JSON.parse(favouriteRecipes);
+let favouriteRecipesArray = [];
+
+function getFavouriteRecipesArray() {
+    let favouriteRecipes = localStorage.getItem('favouriteRecipes');
+    if (favouriteRecipes !== null) {
+        favouriteRecipesArray = JSON.parse(favouriteRecipes);
+    }
 }
 
 function saveFavouriteRecipes() {
-    localStorage.setItem('favouriteRecipes', JSON.stringify(favouriteRecipes));
+    localStorage.setItem('favouriteRecipes', JSON.stringify(favouriteRecipesArray));
+}
+
+function fillFavouriteRecipesDropdown() {
+    getFavouriteRecipesArray();
+    console.log(favouriteRecipesArray);
+    if (favouriteRecipesArray.length > 0) {
+        document.getElementById("dropdownInner").innerHTML = '';
+        for (let recipe of favouriteRecipesArray) {
+            let recipeEl = document.createElement('div');
+            recipeEl.className = 'recipeListEl';
+            document.getElementById("dropdownInner").appendChild(recipeEl);
+            fillListItem(recipeEl, recipe);
+        }
+    } else {
+        let favouritesPlaceholder = document.createElement('div');
+        favouritesPlaceholder.className = 'favouritesPlaceholder';
+        document.getElementById('dropdownInner').appendChild(favouritesPlaceholder);
+        favouritesPlaceholder.innerHTML = "No favourite recipes yet";
+
+    }
+}
+
+function showFavouriteRecipes() {
+    document.getElementById('dropdown').style.display = 'block';
+}
+
+function hideFavouriteRecipes() {
+    document.getElementById('dropdown').style.display = 'none';
+}
+
+function getNumberPerSearch() {
+    return document.getElementById("resultsPerSearch").value;
 }
 
 async function onSearchClicked() {
     let userInput = document.getElementById("searchField").value;
-    // console.log(userInput);
     if (userInput === '') {
         return null;
     }
@@ -28,7 +62,8 @@ async function onSearchClicked() {
 }
 
 async function getRandomRecepies() {
-    let response = await fetch(randomRecipesUrl);
+    let url = randomRecipesUrl + "&number=" + numberOfResults;
+    let response = await fetch(url);
     let recipeList = await response.json();
     return recipeList.recipes;
 }
@@ -39,7 +74,7 @@ async function showRandomRecipes() {
 }
 
 async function searchRecipesByIngredients(items) {
-    let url = recipesByIngredientsUrl + "&ingredients=" + encodeURIComponent(items);
+    let url = recipesByIngredientsUrl + "&number=" + numberOfResults + "&ingredients=" + encodeURIComponent(items);
     // console.log(url);
     let response = await fetch(url);
     let recipeList = await response.json();
@@ -47,18 +82,37 @@ async function searchRecipesByIngredients(items) {
     return recipeList;
 }
 
+function fillListItem(element, recipe) {
+    let thumbnailImg = document.createElement('img');
+    thumbnailImg.className = 'thumb';
+    thumbnailImg.src = recipe.image;
+    element.appendChild(thumbnailImg);
+
+    let recipeInfoEl = document.createElement('div');
+    recipeInfoEl.className = 'recipeListInfo';
+    element.appendChild(recipeInfoEl);
+
+    let recipeName = document.createElement('h2');
+    recipeName.className = 'recipeListName';
+    recipeName.textContent = recipe.title;
+    recipeInfoEl.appendChild(recipeName);
+}
+
 function showResults(recipeList) {
     clearResults();
     clearRecipe();
+
+    console.log(recipeList);
 
     let allElements = [];
 
     for (let i = 0; i < recipeList.length; i++) {
         let recipeEl = document.createElement('div');
-        allElements.push(recipeEl);
         recipeEl.className = 'recipeListEl';
+
+        allElements.push(recipeEl);
         recipeEl.onclick = function () {
-            showRecipe(recipeList[i].id);
+            showRecipe(recipeList[i]);
 
             for (let el of allElements) {
                 el.classList.remove('selected');
@@ -66,22 +120,13 @@ function showResults(recipeList) {
 
             recipeEl.classList.add('selected');
         }
+
         document.getElementById("recipeListSection").appendChild(recipeEl);
-
-        let thumbnailImg = document.createElement('img');
-        thumbnailImg.className = 'thumb';
-        thumbnailImg.src = recipeList[i].image;
-        recipeEl.appendChild(thumbnailImg);
-
-        let recipeInfoEl = document.createElement('div');
-        recipeInfoEl.className = 'recipeListInfo';
-        recipeEl.appendChild(recipeInfoEl);
-
-        let recipeName = document.createElement('h2');
-        recipeName.className = 'recipeListName';
-        recipeName.textContent = recipeList[i].title;
-        recipeInfoEl.appendChild(recipeName);
+        fillListItem(recipeEl, recipeList[i])
     }
+    allElements[0].classList.add('selected');
+    showRecipe(recipeList[0]);
+
 }
 
 function clearResults() {
@@ -91,34 +136,29 @@ function clearResults() {
 
 async function getRecipeFullInfo(item) {
     let url = recipeFullInfoEndpointUrl + item + "/information?includeNutrition=true&apiKey=" + apiKey;
-    // console.log(url);
     let response = await fetch(url);
     let recipeInfo = await response.json();
-    // console.log(recipeInfo);
     return recipeInfo;
 }
 
-async function showRecipe(id) {
+async function showRecipe(recipe) {
     clearRecipe();
 
-    let recipeFullInfo = await getRecipeFullInfo(id);
-    console.log(recipeFullInfo);
+    let recipeFullInfo = await getRecipeFullInfo(recipe.id);
 
-    let bigImg = document.createElement('img');
-    bigImg.src = recipeFullInfo.image;
-    document.getElementById("recipeSection").appendChild(bigImg);
-
-
-    let recipeInfoEl = document.createElement('div');
-    recipeInfoEl.className = 'recipeInfo';
-    document.getElementById("recipeSection").appendChild(recipeInfoEl);
-
+    let bigImgWrapper = document.createElement('div');
+    bigImgWrapper.className = 'img-wrapper';
+    bigImgWrapper.style.backgroundImage = 'url(' + recipeFullInfo.image + ')';
+    document.getElementById("recipeSection").appendChild(bigImgWrapper);
 
     let recipeName = document.createElement('h2');
     recipeName.className = 'recipeName';
     recipeName.textContent = recipeFullInfo.title;
-    recipeInfoEl.appendChild(recipeName);
+    bigImgWrapper.appendChild(recipeName);
 
+    let recipeInfoEl = document.createElement('div');
+    recipeInfoEl.className = 'recipeInfo';
+    document.getElementById("recipeSection").appendChild(recipeInfoEl);
 
     let iconsWrapper = document.createElement('div');
     iconsWrapper.className = 'iconsWrapper';
@@ -141,7 +181,6 @@ async function showRecipe(id) {
     }
     servingsEl.appendChild(servings);
 
-
     let cookingTimeEl = document.createElement('div');
     cookingTimeEl.className = 'cookingTimeEl';
     iconsWrapper.appendChild(cookingTimeEl);
@@ -155,14 +194,41 @@ async function showRecipe(id) {
     cookingTime.textContent = recipeFullInfo.readyInMinutes + ' min';
     cookingTimeEl.appendChild(cookingTime);
 
+    let isRecipeFavourite = false;
+
+    for (let i = 0; i < favouriteRecipesArray.length; i++) {
+        if (recipe.id === favouriteRecipesArray[i].id) {
+            isRecipeFavourite = true;
+        }
+    }
 
     let heartEl = document.createElement('div');
     heartEl.className = 'heartEl';
     iconsWrapper.appendChild(heartEl);
-
     let heartIcon = document.createElement('i');
-    heartIcon.className = 'far fa-heart';
+    let addToFavourites = document.createElement('span');
+
+    if (isRecipeFavourite) {
+        heartIcon.className = 'fas fa-heart';
+        addToFavourites.textContent = 'saved to favourites';
+        heartEl.onclick = undefined;
+        heartEl.style.cursor = 'default';
+    } else {
+        heartIcon.className = 'far fa-heart';
+        addToFavourites.textContent = 'add to favourites';
+        heartEl.onclick = function () {
+            favouriteRecipesArray.push(recipe);
+            heartIcon.className = 'fas fa-heart';
+            addToFavourites.textContent = 'saved to favourites';
+            heartEl.onclick = undefined;
+            heartEl.style.cursor = 'default';
+            saveFavouriteRecipes();
+            fillFavouriteRecipesDropdown();
+        }
+    }
+
     heartEl.appendChild(heartIcon);
+    heartEl.appendChild(addToFavourites);
 
 
     let infoWrapper = document.createElement('div');
@@ -185,7 +251,6 @@ async function showRecipe(id) {
     for (let i = 0; i < recipeFullInfo.extendedIngredients.length; i++) {
         let ingredient = document.createElement('li');
         ingredient.textContent = recipeFullInfo.extendedIngredients[i].original;
-        // console.log(ingredient);
         ingredientsEl.appendChild(ingredient);
     }
 
@@ -208,6 +273,15 @@ function clearRecipe() {
     let clearResults = document.getElementById("recipeSection");
     clearResults.innerHTML = "";
     // console.log(clearResults);
+}
+
+document.getElementById('heart').onclick = function () {
+    fillFavouriteRecipesDropdown();
+    showFavouriteRecipes();
+}
+
+document.getElementById('layer').onclick = function () {
+    hideFavouriteRecipes();
 }
 
 showRandomRecipes();
