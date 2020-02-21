@@ -1,5 +1,5 @@
 let apiKey = "90b4bf234e22493e89325b6f9cce868e";
-let numberOfResults = 10;
+let numberOfResults = 2; // don't forget to change to 10 after finishing landing page and styling 
 
 let randomRecipesUrl = "https://api.spoonacular.com/recipes/random?apiKey=" + apiKey;
 
@@ -49,7 +49,7 @@ function hideFavouriteRecipes() {
 }
 
 function getNumberPerSearch() {
-    return document.getElementById("resultsPerSearch").value;
+    return document.getElementById("resultsPerSearch").value; // what is this function for?
 }
 
 async function onSearchClicked() {

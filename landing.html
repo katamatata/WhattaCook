@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" href="style/reset.css" />
+    <link rel="stylesheet" type="text/css" href="style/landing.css" />
+    <script src="https://kit.fontawesome.com/de514a2348.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap"
+      rel="stylesheet"
+    />
+    <title>WhattaCook</title>
+  </head>
+  <body>
+    <header>
+      <div class="content-wrapper">
+        <div id="header-inner">
+          <div id="header-left">
+            <div id="logo-wrapper">
+              <a href="#"
+                ><img src="style/img/logo.png" alt="logo" id="logo"
+              /></a>
+            </div>
+          </div>
+          <div id="header-right">
+            <div id="heart">
+              <span>Favourites</span>
+              <i class="fas fa-heart"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="image-container">
+      <div id="black-overlay">
+        <div id="title-input-container">
+          <div id="title">
+            <h1>Enjoy cooking</h1>
+          </div>
+          <div id="subtitle">
+            <p>Find your favourite recipe</p>
+          </div>
+          <div id="input-group">
+            <input
+              type="text"
+              id="searchField"
+              placeholder="Search for recipes..."
+            />
+            <button type="button" onclick="onSearchClicked()">
+              <i class="fas fa-search"></i>Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="random-recipes-container">
+      <div class="content-wrapper">
+        <h2>Popular Recipes</h2>
+        <div id="randomRecipesList"></div>
+      </div>
+    </section>
+
+    <section id="categories-container">
+      <div id="categories-wrapper" class="content-wrapper">
+        <h2>Popular Categories</h2>
+      </div>
+    </section>
+
+    <footer>
+      <div class="content-wrapper">
+        <div id="footer-left">
+            <div id="logo-wrapper">
+              <a href="#">
+                <img src="style/img/logo.png" alt="logo" id="logo"/>
+              </a>
+              <p>Copyright &copy; 2019</p>
+            </div>
+          </div>
+          <div id="footer-right"></div>
+          <div id="social-icons">
+            <i class="fab fa-twitter-square"></i>
+            <i class="fab fa-facebook-square"></i>
+            <i class="fab fa-instagram-square"></i>
+            <i class="fas fa-rss-square"></i>
+          </div>
+          </div>
+      </div>
+    </footer>
+
+    <div id="dropdown">
+      <div id="layer"></div>
+      <div id="dropdownInner"></div>
+    </div>
+    <script src="javascript/landing.js"></script>
+  </body>
+</html>
